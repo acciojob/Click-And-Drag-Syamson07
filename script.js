@@ -1,40 +1,40 @@
-// Your code here.
-const container = document.querySelector('.container');
-const cubes = document.querySelectorAll('.cube');
+const itemsContainer = document.querySelector('.items');
+const items = document.querySelectorAll('.item');
 
-let selectedCube = null;
+let selectedItem = null;
 let offsetX = 0;
 let offsetY = 0;
 
-cubes.forEach(cube => {
-  cube.addEventListener('mousedown', (e) => {
-    selectedCube = cube;
-    const rect = cube.getBoundingClientRect();
+items.forEach(item => {
+  item.addEventListener('mousedown', (e) => {
+    selectedItem = item;
+    const rect = item.getBoundingClientRect();
     offsetX = e.clientX - rect.left;
     offsetY = e.clientY - rect.top;
-    cube.style.cursor = 'grabbing';
+    item.style.cursor = 'grabbing';
   });
 });
 
 document.addEventListener('mousemove', (e) => {
-  if (!selectedCube) return;
+  if (!selectedItem) return;
 
-  const containerRect = container.getBoundingClientRect();
-  const cubeRect = selectedCube.getBoundingClientRect();
+  const containerRect = itemsContainer.getBoundingClientRect();
+  const itemRect = selectedItem.getBoundingClientRect();
+
   let x = e.clientX - containerRect.left - offsetX;
   let y = e.clientY - containerRect.top - offsetY;
 
-  // Boundary constraints
-  x = Math.max(0, Math.min(container.clientWidth - cubeRect.width, x));
-  y = Math.max(0, Math.min(container.clientHeight - cubeRect.height, y));
+  // Keep inside the container
+  x = Math.max(0, Math.min(itemsContainer.clientWidth - itemRect.width, x));
+  y = Math.max(0, Math.min(itemsContainer.clientHeight - itemRect.height, y));
 
-  selectedCube.style.left = `${x}px`;
-  selectedCube.style.top = `${y}px`;
+  selectedItem.style.left = `${x}px`;
+  selectedItem.style.top = `${y}px`;
 });
 
 document.addEventListener('mouseup', () => {
-  if (selectedCube) {
-    selectedCube.style.cursor = 'grab';
+  if (selectedItem) {
+    selectedItem.style.cursor = 'grab';
   }
-  selectedCube = null;
+  selectedItem = null;
 });
