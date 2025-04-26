@@ -1,40 +1,40 @@
 const itemsContainer = document.querySelector('.items');
-const items = document.querySelectorAll('.item');
+let draggedItem = null;
 
-let selectedItem = null;
-let offsetX = 0;
-let offsetY = 0;
-
-items.forEach(item => {
-  item.addEventListener('mousedown', (e) => {
-    selectedItem = item;
-    const rect = item.getBoundingClientRect();
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
-    item.style.cursor = 'grabbing';
+document.querySelectorAll('.item').forEach(item => {
+  item.addEventListener('dragstart', (e) => {
+    draggedItem = item;
+    setTimeout(() => {
+      item.style.display = 'none';
+    }, 0);
   });
-});
 
-document.addEventListener('mousemove', (e) => {
-  if (!selectedItem) return;
+  item.addEventListener('dragend', (e) => {
+    setTimeout(() => {
+      draggedItem.style.display = 'block';
+      draggedItem = null;
+    }, 0);
+  });
 
-  const containerRect = itemsContainer.getBoundingClientRect();
-  const itemRect = selectedItem.getBoundingClientRect();
+  item.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
 
-  let x = e.clientX - containerRect.left - offsetX;
-  let y = e.clientY - containerRect.top - offsetY;
+  item.addEventListener('dragenter', (e) => {
+    e.preventDefault();
+    item.classList.add('drag-over');
+  });
 
-  // Keep inside the container
-  x = Math.max(0, Math.min(itemsContainer.clientWidth - itemRect.width, x));
-  y = Math.max(0, Math.min(itemsContainer.clientHeight - itemRect.height, y));
+  item.addEventListener('dragleave', () => {
+    item.classList.remove('drag-over');
+  });
 
-  selectedItem.style.left = `${x}px`;
-  selectedItem.style.top = `${y}px`;
-});
-
-document.addEventListener('mouseup', () => {
-  if (selectedItem) {
-    selectedItem.style.cursor = 'grab';
-  }
-  selectedItem = null;
+  item.addEventListener('drop', (e) => {
+    e.preventDefault();
+    item.classList.remove('drag-over');
+    if (draggedItem !== item) {
+      // Insert the dragged item before the one it was dropped on
+      itemsContainer.insertBefore(draggedItem, item);
+    }
+  });
 });
