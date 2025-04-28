@@ -1,40 +1,33 @@
+/* styles.css */
 body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  background: #f7f7f7;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
 }
 
 .container {
-  width: 400px;
-  height: 500px;
-  background: white;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  overflow-y: auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    display: grid;
+    grid-template-columns: repeat(2, 100px);
+    grid-template-rows: repeat(2, 100px);
+    gap: 10px;
+    position: relative;
+    width: 220px;
+    height: 220px;
+    border: 2px solid #333;
+    background-color: #fff;
 }
 
-.items {
-  padding: 20px;
-}
-
-.item {
-  width: 100%;
-  padding: 15px;
-  background: #4CAF50;
-  color: white;
-  font-size: 18px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  cursor: grab;
-  user-select: none;
-}
-
-/* Highlight drop area */
-.drag-over {
-  border: 2px dashed #000;
+.cube {
+    width: 100px;
+    height: 100px;
+    background-color: #3498db;
+    border: 2px solid #2980b9;
+    cursor: pointer;
+    position: absolute;
+    transition: transform 0.1s ease-out;
 }

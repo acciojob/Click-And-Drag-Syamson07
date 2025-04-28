@@ -1,40 +1,50 @@
-const itemsContainer = document.querySelector('.items');
-let draggedItem = null;
+// script.js
+const cubes = document.querySelectorAll('.cube');
+const container = document.querySelector('.container');
 
-document.querySelectorAll('.item').forEach(item => {
-  item.addEventListener('dragstart', (e) => {
-    draggedItem = item;
-    setTimeout(() => {
-      item.style.display = 'none';
-    }, 0);
-  });
+let activeCube = null;
+let offsetX = 0;
+let offsetY = 0;
 
-  item.addEventListener('dragend', (e) => {
-    setTimeout(() => {
-      draggedItem.style.display = 'block';
-      draggedItem = null;
-    }, 0);
-  });
-
-  item.addEventListener('dragover', (e) => {
-    e.preventDefault();
-  });
-
-  item.addEventListener('dragenter', (e) => {
-    e.preventDefault();
-    item.classList.add('drag-over');
-  });
-
-  item.addEventListener('dragleave', () => {
-    item.classList.remove('drag-over');
-  });
-
-  item.addEventListener('drop', (e) => {
-    e.preventDefault();
-    item.classList.remove('drag-over');
-    if (draggedItem !== item) {
-      // Insert the dragged item before the one it was dropped on
-      itemsContainer.insertBefore(draggedItem, item);
-    }
-  });
+cubes.forEach(cube => {
+    cube.addEventListener('mousedown', (e) => {
+        activeCube = cube;
+        // Get the initial mouse position and cube position
+        offsetX = e.clientX - cube.getBoundingClientRect().left;
+        offsetY = e.clientY - cube.getBoundingClientRect().top;
+        
+        // Add mousemove and mouseup listeners
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
 });
+
+function onMouseMove(e) {
+    if (!activeCube) return;
+
+    // Calculate the new position of the cube
+    let newX = e.clientX - offsetX;
+    let newY = e.clientY - offsetY;
+
+    // Get the boundaries of the container
+    const containerRect = container.getBoundingClientRect();
+
+    // Make sure the cube stays within the container boundaries
+    newX = Math.max(containerRect.left, Math.min(newX, containerRect.right - activeCube.offsetWidth));
+    newY = Math.max(containerRect.top, Math.min(newY, containerRect.bottom - activeCube.offsetHeight));
+
+    // Apply the new position
+    activeCube.style.left = `${newX - containerRect.left}px`;
+    activeCube.style.top = `${newY - containerRect.top}px`;
+}
+
+function onMouseUp() {
+    if (!activeCube) return;
+
+    // Remove the mousemove and mouseup listeners
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    // Drop the cube (it will stay in its new position)
+    activeCube = null;
+}
